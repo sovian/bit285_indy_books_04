@@ -22,7 +22,7 @@ namespace IndyBooks.Controllers
         {
             //TODO: filter books by the id (if passed an id as its Route Parameter),
             //     otherwise use the entire collection of Books, ordered by SKU.
-            IEnumerable<Book> books = (id > 0) ? _db.Books.Include(b=>b.Author).Where(b => b.Id == id) :
+            IEnumerable<Book> books = (id > 0) ? _db.Books.Include(b=>b.Author).Where(b => b.Id== id) :
                                                  _db.Books.Include(b=>b.Author);
 
             return View("SearchResults", books);
