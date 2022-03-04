@@ -1,5 +1,6 @@
 ﻿using IndyBooks.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,20 +35,34 @@ namespace IndyBooks.Controllers
 
         // POST api/<WriterController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post(Writer writer)
         {
+            if (!ModelState.IsValid) { return BadRequest(); }
+            _db.Add(writer);
+            _db.SaveChanges();
+            return Accepted();
         }
 
         // PUT api/<WriterController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(long id, Writer writer)
         {
+            writer.Id = id;
+            _db.Update(writer);
+            _db.SaveChanges();
+            return Accepted();
         }
 
         // DELETE api/<WriterController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(long id)
         {
+            Writer writer =_db.Writers.Include(w=>w.Books).FirstOrDefault(w=>w.Id == id);
+            if (writer == null) { return BadRequest(); }
+            _db.Writers.Remove(writer);
+            _db.SaveChanges();
+            return Accepted();
+
         }
     }
 }
