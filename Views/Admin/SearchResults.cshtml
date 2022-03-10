@@ -23,7 +23,7 @@
             <td>
                 @book.Title
             </td>
-            <td>
+            <td data-id="@book.Author.Id">
                 @book.Author.Name
             </td>
             <td class="rightedge">
@@ -44,5 +44,26 @@
     }
 
 </table>
+<script>
+/*
+    jQuery tooltip provides the hover effect,
+    AJAX call to '/api/writer/bookcount/{id}' gets the JSON data
+    for the book count for the given author id
+ */
+    $(function () {
+        $( document ).tooltip({
+            items:"[data-id]",
+            content:function(){
+                    /* Get the book id from the HTML*/
+                    var id = this.attributes["data-id"].nodeValue;
+                    /* Call the API */
+                    $.getJSON('/api/writer/'+id+'/bookcount', function(data) {
+                        $("[data-id =" + id + "]")
+                            .attr('title', 'Book Count: ' + data.count);
+                    });
+            }
+        });
+    });
+</script>
 
 

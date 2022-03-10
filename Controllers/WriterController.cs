@@ -64,5 +64,11 @@ namespace IndyBooks.Controllers
             return Accepted();
 
         }
+        [HttpGet("{id}/bookcount")]
+        public IActionResult GetCount(int id)
+        {
+            Writer writer = _db.Writers.Include(w => w.Books).FirstOrDefault(w => w.Id == id);
+            return Ok(new { count = writer.Books.Count() });
+        }
     }
 }
